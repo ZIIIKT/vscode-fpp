@@ -133,6 +133,7 @@ export abstract class FppProjectManager {
         options?: ParsingOptions
     ): Promise<FppMessage> {
         if (documentOrUri instanceof vscode.Uri) {
+            console.log("documentOrUri instanceof vscode.Uri");
             const [version, text] = await this.getTextOf(documentOrUri);
             return await this.parseImpl({
                 path: documentOrUri.path,
@@ -140,6 +141,7 @@ export abstract class FppProjectManager {
                 getText: () => text,
             }, token, options);
         } else {
+            console.log("documentOrUri NOT instanceof vscode.Uri");
             return await this.parseImpl({
                 path: documentOrUri.uri.path,
                 version: documentOrUri.version,
@@ -162,6 +164,7 @@ export abstract class FppProjectManager {
         const parentFiles = this.parentFiles.get(document.path);
 
         if (parentFiles && parentFiles.size > 0) {
+            console.log("has parents");
             const isOldFppi = (this.fppiVersions.get(document.path) ?? -10) >= document.version;
 
             this.syntaxListener.flush(document.path);
@@ -184,6 +187,7 @@ export abstract class FppProjectManager {
             this.fppiVersions.set(document.path, document.version);
             return out;
         } else if (path.extname(document.path) === ".fppi") {
+            console.log("has .fppi");
             this.syntaxListener.flush(document.path);
             this.syntaxListener.flush(document.path);
             this.syntaxListener.emit(vscode.Uri.file(document.path), new vscode.Diagnostic(
@@ -209,6 +213,7 @@ export abstract class FppProjectManager {
                 version: -1,
             });
         } else {
+            console.log("Running parseimpl2!");
             return await this.parseImpl2(document, token, options ?? {});
         }
     }
@@ -249,6 +254,7 @@ export abstract class FppProjectManager {
             this.annotations.set(key, annotator);
         }
 
+        // FIXME: Why does this get run? What is key?
         if (!this.inProject(key)) {
             options.disableDecl = true;
         }
@@ -257,6 +263,7 @@ export abstract class FppProjectManager {
             this.decl.hasComponentInstances = false;
 
             this.decl.pass(msg.ast);
+            console.log("decl.pass finished!");
 
             // Keep track of files that have component instances
             // This is important since instances create an extra depth

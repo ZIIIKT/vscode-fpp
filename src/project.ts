@@ -57,6 +57,7 @@ export class FppProject extends FppProjectManager implements vscode.Disposable {
     // Tracks which files should be tracked by the decl collector
     inProject(path: string): boolean {
         const isInProject = this.loadingProject || this.files.has(path);
+        console.log("Files checked by inProject: ", this.files);
         if (!isInProject) {
             const parentFiles = this.parentFiles.get(path);
             if (parentFiles) {

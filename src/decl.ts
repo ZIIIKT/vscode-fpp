@@ -324,6 +324,7 @@ export class DeclCollector extends MemberTraverser {
         this.references.dispose(grammarSource);
     }
 
+    // Main entry point for the decl collector
     pass(ast: Fpp.TranslationUnit, scope: Fpp.QualifiedIdentifier = []): void {
         this.hasComponentInstances = false;
         this.clearDecls(ast.location.source);

@@ -120,10 +120,14 @@ class FppExtension implements
                 .finally(() => {
                     this.subscriptions = [
                         // Update the internal ast on document change
-                        vscode.workspace.onDidChangeTextDocument((e) => {
+                        vscode.workspace.onDidChangeTextDocument(async (e) => {
                             if (vscode.languages.match(this.project.documentSelector, e.document)) {
                                 // Reparse the document to update the information
-                                this.project.parse(e.document);
+                                const promise = this.project.parse(e.document, undefined, { disableDecl: false });
+                                const result = await promise;
+                                console.log("Reparse finished! Result: ", result);
+                                console.log("Collector: ", this.project.decl);
+                                console.log("Components: ", this.project.decl.components);
                             }
                         }),
                         // Refresh project dictionary listing
