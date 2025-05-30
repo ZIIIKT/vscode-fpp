@@ -255,6 +255,7 @@ export abstract class FppProjectManager {
         }
 
         // FIXME: Why does this get run? What is key?
+        console.log("key: ", key);
         if (!this.inProject(key)) {
             options.disableDecl = true;
         }
